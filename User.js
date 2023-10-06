@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    trim: true,
   },
   personalEmail: {
     type: String,
@@ -36,9 +35,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    trim: true,
   },
- 
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const User = mongoose.model('User', userSchema);
