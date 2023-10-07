@@ -25,21 +25,21 @@ const userSchema = new mongoose.Schema({
   password: String,
 });
 
-const User =require('./User');
+const User = require('./User');
 
 // Register a new user
 app.post('/register', async (req, res) => {
   try {
-    const {   username,
-        regNo,
-        branch,
-        passingYear,
-        city,
-        collegeEmail,
-        personalEmail,
-        phone } = req.body;
+    const { username,
+      regNo,
+      branch,
+      passingYear,
+      city,
+      collegeEmail,
+      personalEmail,
+      phone } = req.body;
     // Check if the email is already registered
-    const existingUser = await User.findOne({ collegeEmail,personalEmail });
+    const existingUser = await User.findOne({ collegeEmail, personalEmail });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already registered' });
     }
@@ -48,14 +48,14 @@ app.post('/register', async (req, res) => {
 
     // Create a new user
     const newUser = new User({
-        username,
-        regNo,
-        branch,
-        passingYear,
-        city,
-        collegeEmail,
-        personalEmail,
-        phone
+      username,
+      regNo,
+      branch,
+      passingYear,
+      city,
+      collegeEmail,
+      personalEmail,
+      phone
     });
 
     await newUser.save();
