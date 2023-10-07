@@ -11,7 +11,9 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello, world!' });
+});
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://rnxg:PrVb6Tqf27OU2DNK@rnxgmembers.2pcnlmt.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
