@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'Hello, world!' });
 });
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://rnxg:PrVb6Tqf27OU2DNK@rnxgmembers.2pcnlmt.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://rnxg:XTgIyrIriaJ41WB9@rnxgmembers.2pcnlmt.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -32,21 +32,27 @@ const User = require('./User');
 // Register a new user
 app.post('/register', async (req, res) => {
   try {
-    const { username,
+    const {
+      username,
       regNo,
       branch,
       passingYear,
       city,
       collegeEmail,
       personalEmail,
-      phone } = req.body;
+      phone,
+    } = req.body;
+
     // Check if the email is already registered
-    const existingUser = await User.findOne({ collegeEmail, personalEmail });
+    const existingUser = await User.findOne({
+      $or: [{ collegeEmail }, { personalEmail }],
+    });
+
     if (existingUser) {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
-    // Hash the password
+    // Hash the password (if you have a password field)
 
     // Create a new user
     const newUser = new User({
@@ -57,13 +63,14 @@ app.post('/register', async (req, res) => {
       city,
       collegeEmail,
       personalEmail,
-      phone
+      phone,
     });
 
     await newUser.save();
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
