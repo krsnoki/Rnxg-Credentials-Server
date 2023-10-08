@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const app = express();
 const port = process.env.PORT || 5000;
-
+const QRCode = require('qrcode');
 // Middleware
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -73,6 +73,28 @@ app.post('/register', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+app.get('/generateQR/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Retrieve the data from MongoDB using the ID or any other method
+    const document = await User.findById(id);
+
+    if (!document) {
+      return res.status(404).json({ message: 'Data not found' });
+    }
+
+    // Encode the collegeEmail as a QR code
+    const qrCodeImage = await QRCode.toDataURL(document.collegeEmail);
+
+    // Send the QR code image as a response
+    res.send(`<img src="${qrCodeImage}" alt="QR Code"/>`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error generating QR code' });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
